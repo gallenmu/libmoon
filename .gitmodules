@@ -1,31 +1,31 @@
 [submodule "deps/luajit"]
 	path = deps/luajit
-	url = https://github.com/emmericp/LuaJIT
+	url = ../LuaJIT
 	ignore = untracked
 	branch = v2.1
 [submodule "deps/dpdk"]
 	path = deps/dpdk
-	url = https://github.com/emmericp/dpdk
+	url = ../dpdk
 	ignore = untracked
 	branch = v17.08
 [submodule "deps/pciids"]
 	path = deps/pciids
-	url = https://github.com/emmericp/pciids
+	url = ../pciids
 	ignore = untracked
 	branch = master
 [submodule "lua/lib/syscall"]
 	path = lua/lib/syscall
-	url = https://github.com/emmericp/ljsyscall
+	url = ../ljsyscall
 	branch = master
 [submodule "lua/lib/pf"]
 	path = lua/lib/pf
-	url = https://github.com/emmericp/pflua
+	url = ../pflua
 [submodule "lua/lib/turbo"]
 	path = lua/lib/turbo
-	url = https://github.com/emmericp/turbo
+	url = ../turbo
 [submodule "deps/highwayhash"]
 	path = deps/highwayhash
-	url = https://github.com/google/highwayhash.git
+	url = ../highwayhash
 [submodule "deps/tbb"]
 	path = deps/tbb
-	url = https://github.com/01org/tbb.git
+	url = ../tbb
