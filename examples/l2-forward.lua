@@ -40,10 +40,17 @@ end
 
 function forward(rxQueue, txQueue)
 	-- a bufArray is just a list of buffers that we will use for batched forwarding
+	dstmc = parseMacAddress('aa:bb:cc:dd:ee:ff', 0)
 	local bufs = memory.bufArray()
 	while lm.running() do -- check if Ctrl+c was pressed
 		-- receive one or more packets from the queue
 		local count = rxQueue:recv(bufs)
+		-- change mac address to work in VM
+		for i, buf in ipairs(bufs) do
+			local pkt = buf:getUdpPacket()
+			pkt.eth:setDst(dstmc)
+		end
+
 		-- send out all received bufs on the other queue
 		-- the bufs are free'd implicitly by this function
 		txQueue:sendN(bufs, count)

@@ -42,6 +42,11 @@ local voidPointer = ffi.typeof("void*")
 
 local INITIAL_FILE_SIZE = 512 * 1024 * 1024
 
+local TCPDUMP_MAGIC              = 0xA1B2C3D4
+local TCPDUMP_MAGIC_SWAPPED      = 0xD4C3B2A1
+local TCPDUMP_MAGIC_NANO         = 0xA1B23C4D
+local TCPDUMP_MAGIC_NANO_SWAPPED = 0x4D3CB2A1
+
 --- Set the file size for new pcap writers
 --- @param newSizeInBytes new file size in bytes
 function mod:setInitialFilesize(newSizeInBytes)
@@ -50,10 +55,17 @@ end
 
 local writer = {}
 writer.__index = writer
+writer.useNanosecondTimestamps = false
 
 local function writeHeader(ptr)
 	local hdr = headerPointer(ptr)
-	hdr.magic_number = 0xa1b2c3d4
+	if writer.useNanosecondTimestamps then
+		print("using nanosecond timestamps")
+		hdr.magic_number = TCPDUMP_MAGIC_NANO
+	else
+		print("using microsecond timestamps")
+		hdr.magic_number = TCPDUMP_MAGIC
+	end
 	hdr.version_major = 2
 	hdr.version_minor = 4
 	hdr.thiszone = 0
@@ -68,6 +80,16 @@ end
 --- @param startTime posix timestamp, all timestamps of inserted packets will be relative to this timestamp
 ---        default: relative to libmoon.getTime() == 0
 function mod:newWriter(filename, startTime)
+	return mod:newWriter(filename, startTime, false)
+end
+
+--- Create a new fast pcap writer with the given file name.
+--- Call :close() on the writer when you are done.
+--- @param startTime posix timestamp, all timestamps of inserted packets will be relative to this timestamp
+--- @param useNanosecondTimestamps use timestamps with nanosecond precision
+---        default: relative to libmoon.getTime() == 0
+function mod:newWriter(filename, startTime, useNanosecondTimestamps)
+	writer.useNanosecondTimestamps = useNanosecondTimestamps
 	startTime = startTime or wallTime() - libmoon.getTime()
 	local fd = S.open(filename, "creat, rdwr, trunc", "0666")
 	if not fd then
@@ -126,7 +148,12 @@ function writer:write(timestamp, data, len, origLen)
 	end
 	local time = self.startTime + timestamp
 	local timeSec = math.floor(time)
-	local timeMicros = (time - timeSec) * 1000000
+	local timeMicros = 0
+	if self.useNanosecondTimestamps then
+		timeMicros = (time - timeSec) * 1000000000
+	else
+		timeMicros = (time - timeSec) * 1000000
+	end
 	C.libmoon_write_pcap(self.ptr + self.offset, data, len, origLen or len, time, timeMicros)
 	self.offset = self.offset + len + 16
 end
@@ -145,9 +172,10 @@ reader.__index = reader
 
 local function readHeader(ptr)
 	local hdr = headerPointer(ptr)
-	if hdr.magic_number == 0xd4c3b2a1 then
+	if hdr.magic_number == TCPDUMP_MAGIC_NANO_SWAPPED or hdr.magic_number == TCPDUMP_MAGIC_SWAPPED then
 		log:fatal("big endian pcaps are not supported")
-	elseif hdr.magic_number ~= 0xa1b2c3d4 then
+	end
+	if not (hdr.magic_number == TCPDUMP_MAGIC or hdr.magic_number == TCPDUMP_MAGIC_NANO) then
 		log:fatal("not a pcap file")
 	end
 	if hdr.version_major ~= 2 or hdr.version_minor ~= 4 then
