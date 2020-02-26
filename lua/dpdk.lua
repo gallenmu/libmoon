@@ -153,14 +153,10 @@ function mod.init()
 	end
 	local argv = { "libmoon" }
 	-- core mapping, shared cores use the highest IDs
-	if #cfg.cores + libmoon.config.numSharedCores >= 128 then
-		-- --lcores is restricted to 0-127 in DPDK; this is a problem on large CPUs
-		for i = #cfg.cores, math.max(1, #cfg.cores - libmoon.config.numSharedCores + 1), -1 do
-			cfg.cores[i] = nil
-		end
-		libmoon.config.cores = cfg.cores
-	end
 	local maxCore = cfg.cores[#cfg.cores]
+	if libmoon.config.includeSharedCores then
+		maxCore = maxCore - libmoon.config.numSharedCores---Required in order to use some specific hosts for execution host
+	end
 	local coreMapping = ("%d-%d,(%d-%d)@%d"):format(cfg.cores[1], maxCore, maxCore + 1, maxCore + libmoon.config.numSharedCores, cfg.cores[1])
 	argv[#argv + 1] = ("--lcores=%s"):format(coreMapping)
 
