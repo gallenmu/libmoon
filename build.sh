@@ -71,10 +71,11 @@ fi
 if ${MLX4} ; then
 	sed -ri 's,(MLX4_PMD=).*,\1y,' config/common_base
 fi
-meson -Dprefix=$(readlink -f ./)/x86_64-native-linux-gcc build
+meson -Dprefix="$(readlink -f ./)/x86_64-native-linux-gcc" build
 cd build/
 ninja
 ninja install
+ldconfig
 )
 
 (

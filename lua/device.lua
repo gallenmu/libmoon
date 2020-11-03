@@ -626,7 +626,7 @@ end
 
 function mod.getDevices()
 	local result = {}
-	for i = 0, dpdkc.rte_eth_dev_count() - 1 do
+	for i = 0, dpdkc.rte_eth_dev_count_avail() - 1 do
 		local dev = mod.get(i)
 		result[#result + 1] = { id = i, mac = dev:getMacString(i), name = dev:getName(i) }
 	end
