@@ -56,18 +56,25 @@ make install DESTDIR=$(pwd)
 )
 
 (
+# Build the DPDK dependencies for igb_uio driver module
+cd deps/dpdk-kmods/linux/igb_uio
+make -j $NUM_CPUS
+)
+
+(
 cd deps/dpdk
 #build DPDK with the right configuration
-meson x86_64-native-linux-gcc
-sed -ri 's/^CONFIG_RTE_EAL_IGB_UIO=n/CONFIG_RTE_EAL_IGB_UIO=y/' x86_64-native-linuxapp-gcc/.config
-sed -ri 's,(CONFIG_RTE_LIBRTE_IEEE1588=).*,\1y,' x86_64-native-linux-gcc/.config
+sed -ri 's,(CONFIG_RTE_LIBRTE_IEEE1588=).*,\1y,' config/common_base
 if ${MLX5} ; then
-	sed -ri 's,(MLX5_PMD=).*,\1y,' x86_64-native-linux-gcc/.config
+	sed -ri 's,(MLX5_PMD=).*,\1y,' config/common_base
 fi
 if ${MLX4} ; then
-	sed -ri 's,(MLX4_PMD=).*,\1y,' x86_64-native-linux-gcc/.config
+	sed -ri 's,(MLX4_PMD=).*,\1y,' config/common_base
 fi
-EXTRA_CFLAGS="-Wno-error" make -j $NUM_CPUS O=x86_64-native-linux-gcc
+meson -Dprefix=$(readlink -f ./)/x86_64-native-linux-gcc build
+cd build/
+ninja
+ninja install
 )
 
 (
