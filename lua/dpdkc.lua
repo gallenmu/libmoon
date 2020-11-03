@@ -185,6 +185,14 @@ ffi.cdef[[
 		uint64_t offloads;
 	};
 
+	struct rte_eth_rxseg_capa {
+        uint32_t multi_pools:1; /**< Supports receiving to multiple pools.*/
+        uint32_t offset_allowed:1; /**< Supports buffer offsets. */
+        uint32_t offset_align_log2:4; /**< Required offset alignment. */
+        uint16_t max_nseg; /**< Maximum amount of segments to split. */
+        uint16_t reserved; /**< Reserved field. */
+    };
+
 	struct rte_eth_dev_info {
 		void *device; /** Generic device information */
 		const char *driver_name; /**< Device Driver name. */
