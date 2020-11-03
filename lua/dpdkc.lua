@@ -232,8 +232,8 @@ ffi.cdef[[
 		/** Generic device capabilities (RTE_ETH_DEV_CAPA_). */
 		uint64_t dev_capa;
 		struct rte_eth_switch_info switch_info;
-		uint64_t 	reserved_64s [2]
-        void * 	reserved_ptrs [2]
+		uint64_t 	reserved_64s [2];
+        void * 	reserved_ptrs [2];
 	};
 
 	struct libmoon_device_config {
