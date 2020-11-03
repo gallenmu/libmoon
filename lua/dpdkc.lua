@@ -173,6 +173,8 @@ ffi.cdef[[
 		uint8_t rx_drop_en; /**< Drop packets if no descriptors are available. */
 		uint8_t rx_deferred_start; /**< Do not start queue with rte_eth_dev_start(). */
 		uint64_t offloads;
+		uint64_t reserved_64s[2]; /**< Reserved for future fields */
+	    void *reserved_ptrs[2];   /**< Reserved for future fields */
 	};
 
 	struct rte_eth_txconf {
@@ -183,6 +185,8 @@ ffi.cdef[[
 
 		uint8_t tx_deferred_start; /**< Do not start queue with rte_eth_dev_start(). */
 		uint64_t offloads;
+		uint64_t reserved_64s[2]; /**< Reserved for future fields */
+	    void *reserved_ptrs[2];   /**< Reserved for future fields */
 	};
 
 	struct rte_eth_dev_info {
