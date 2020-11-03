@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/dpdk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/highwayhash" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/luajit" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/pciids" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/tbb" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lua/lib/pf" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lua/lib/syscall" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/lua/lib/turbo" vcs="Git" />
+  </component>
+</project>

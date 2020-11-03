@@ -58,7 +58,8 @@ make install DESTDIR=$(pwd)
 (
 cd deps/dpdk
 #build DPDK with the right configuration
-make config T=x86_64-native-linux-gcc O=x86_64-native-linux-gcc
+meson x86_64-native-linux-gcc
+sed -ri 's/^CONFIG_RTE_EAL_IGB_UIO=n/CONFIG_RTE_EAL_IGB_UIO=y/' x86_64-native-linuxapp-gcc/.config
 sed -ri 's,(CONFIG_RTE_LIBRTE_IEEE1588=).*,\1y,' x86_64-native-linux-gcc/.config
 if ${MLX5} ; then
 	sed -ri 's,(MLX5_PMD=).*,\1y,' x86_64-native-linux-gcc/.config

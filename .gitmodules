@@ -31,3 +31,6 @@
 	path = deps/tbb
 	url = https://github.com/01org/tbb.git
 	ignore = untracked
+[submodule "deps/dpdk-kmods"]
+	path = deps/dpdk-kmods
+	url = git://dpdk.org/dpdk-kmods
