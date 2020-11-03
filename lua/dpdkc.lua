@@ -198,10 +198,9 @@ ffi.cdef[[
 		uint16_t max_rx_queues; /**< Maximum number of RX queues. */
 		uint16_t max_tx_queues; /**< Maximum number of TX queues. */
 		uint32_t max_mac_addrs; /**< Maximum number of MAC addresses. */
-		uint32_t max_hash_mac_addrs;
-		/** Maximum number of hash MAC addresses for MTA and UTA. */
 		uint16_t max_vfs; /**< Maximum number of VFs. */
 		uint16_t max_vmdq_pools; /**< Maximum number of VMDq pools. */
+		struct rte_eth_rxseg_capa rx_seg_capa;
 		uint64_t rx_offload_capa;
 		/**< All RX offload capabilities including all per-queue ones */
 		uint64_t tx_offload_capa;
@@ -233,6 +232,8 @@ ffi.cdef[[
 		/** Generic device capabilities (RTE_ETH_DEV_CAPA_). */
 		uint64_t dev_capa;
 		struct rte_eth_switch_info switch_info;
+		uint64_t 	reserved_64s [2]
+        void * 	reserved_ptrs [2]
 	};
 
 	struct libmoon_device_config {
