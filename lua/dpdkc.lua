@@ -98,7 +98,7 @@ ffi.cdef[[
 		uint32_t seqn;
 
 		void* shinfo; /**Shared Data for external buffer attached**/
-		uint64_t dynfield1[2] /**Reserved for dynamic field*/
+		uint64_t dynfield1[2]; /**Reserved for dynamic field*/
 	};
 
 	// device status/info
