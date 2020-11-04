@@ -75,6 +75,8 @@ meson -Dprefix="$(readlink -f ./)/x86_64-native-linux-gcc" build
 cd build/
 ninja
 ninja install
+cd ../
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(readlink -f ./)/x86_64-native-linux-gcc/lib/x86_64-linux-gnu
 )
 
 (
