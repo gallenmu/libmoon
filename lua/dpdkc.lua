@@ -96,6 +96,9 @@ ffi.cdef[[
 		/** Timesync flags for use with IEEE1588. */
 		uint16_t timesync;
 		uint32_t seqn;
+
+		void* shinfo; /**Shared Data for external buffer attached**/
+		uint64_t dynfield1[2] /**Reserved for dynamic field*/
 	};
 
 	// device status/info
