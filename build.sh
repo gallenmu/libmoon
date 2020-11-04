@@ -75,7 +75,7 @@ meson -Dprefix="$(readlink -f ./)/x86_64-native-linux-gcc" build
 cd build/
 ninja
 ninja install
-ldconfig
+ldconfig "$(readlink -f ./)/x86_64-native-linux-gcc/lib/*"
 )
 
 (
