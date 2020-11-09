@@ -37,7 +37,7 @@ Just run `build.sh`, `bind-interfaces.sh`, and `setup-hugetlbfs.sh`. When using 
 ```
 # install dependencies and compile libmoon
 sudo apt-get install git meson ninja-build build-essential cmake linux-headers-`uname -r` lshw libnuma-dev
-git clone https://github.com/libmoon/libmoon
+git clone https://github.com/WiednerF/libmoon
 cd libmoon
 ./build.sh
 # bind all NICs that are not actively used (no IP configured) to DPDK
