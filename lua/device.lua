@@ -154,7 +154,19 @@ function mod.config(args)
 		dpdk.ETH_RSS_L2_PAYLOAD,
 		dpdk.ETH_RSS_IPV6_EX,
 		dpdk.ETH_RSS_IPV6_TCP_EX,
-		dpdk.ETH_RSS_IPV6_UDP_EX
+		dpdk.ETH_RSS_IPV6_UDP_EX,
+		dpdk.ETH_RSS_PORT,
+		dpdk.ETH_RSS_VXLAN,
+		dpdk.ETH_RSS_GENEVE,
+		dpdk.ETH_RSS_NVGRE,
+		dpdk.ETH_RSS_GTPU,
+		dpdk.ETH_RSS_ETH,
+		dpdk.ETH_RSS_S_VLAN,
+		dpdk.ETH_RSS_C_VLAN,
+		dpdk.ETH_RSS_ESP,
+		dpdk.ETH_RSS_AH,
+		dpdk.ETH_RSS_L2TPV3,
+		dpdk.ETH_RSS_PFCP
 	}
 	local rssMask = 0
 	for i, v in ipairs(args.rssFunctions) do

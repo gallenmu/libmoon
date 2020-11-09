@@ -69,7 +69,13 @@ mod.RTE_ETH_FLOW_L2_PAYLOAD         = 14
 mod.RTE_ETH_FLOW_IPV6_EX            = 15
 mod.RTE_ETH_FLOW_IPV6_TCP_EX        = 16
 mod.RTE_ETH_FLOW_IPV6_UDP_EX        = 17
-mod.RTE_ETH_FLOW_MAX                = 18
+mod.RTE_ETH_FLOW_PORT      			= 18
+mod.RTE_ETH_FLOW_VXLAN    			= 19
+mod.RTE_ETH_FLOW_GENEVE      		= 20
+mod.RTE_ETH_FLOW_NVGRE      		= 21
+mod.RTE_ETH_FLOW_VXLAN_GPE      	= 22
+mod.RTE_ETH_FLOW_GTPU      			= 23
+mod.RTE_ETH_FLOW_MAX                = 24
 
 -- RSS flags
 mod.ETH_RSS_IPV4               = bit.lshift(1ULL, mod.RTE_ETH_FLOW_IPV4)
@@ -88,6 +94,26 @@ mod.ETH_RSS_L2_PAYLOAD         = bit.lshift(1ULL, mod.RTE_ETH_FLOW_L2_PAYLOAD)
 mod.ETH_RSS_IPV6_EX            = bit.lshift(1ULL, mod.RTE_ETH_FLOW_IPV6_EX)
 mod.ETH_RSS_IPV6_TCP_EX        = bit.lshift(1ULL, mod.RTE_ETH_FLOW_IPV6_TCP_EX)
 mod.ETH_RSS_IPV6_UDP_EX        = bit.lshift(1ULL, mod.RTE_ETH_FLOW_IPV6_UDP_EX)
+mod.ETH_RSS_PORT       		   = bit.lshift(1ULL, mod.RTE_ETH_FLOW_PORT)
+mod.ETH_RSS_VXLAN       	   = bit.lshift(1ULL, mod.RTE_ETH_FLOW_VXLAN)
+mod.ETH_RSS_GENEVE       	   = bit.lshift(1ULL, mod.RTE_ETH_FLOW_GENEVE)
+mod.ETH_RSS_NVGRE       	   = bit.lshift(1ULL, mod.RTE_ETH_FLOW_NVGRE)
+mod.ETH_RSS_GTPU       		   = bit.lshift(1ULL, mod.RTE_ETH_FLOW_GTPU)
+mod.ETH_RSS_ETH      		   = bit.lshift(1ULL, 24)
+mod.ETH_RSS_S_VLAN      	   = bit.lshift(1ULL, 25)
+mod.ETH_RSS_C_VLAN      	   = bit.lshift(1ULL, 26)
+mod.ETH_RSS_ESP      		   = bit.lshift(1ULL, 27)
+mod.ETH_RSS_AH      		   = bit.lshift(1ULL, 28)
+mod.ETH_RSS_L2TPV3      	   = bit.lshift(1ULL, 29)
+mod.ETH_RSS_PFCP      		   = bit.lshift(1ULL, 30)
+
+-- Used to combine with above ETH_RSS_* for more specific input selection
+mod.ETH_RSS_L3_SRC_ONLY        = bit.lshift(1ULL, 63)
+mod.ETH_RSS_L3_DST_ONLY        = bit.lshift(1ULL, 62)
+mod.ETH_RSS_L4_SRC_ONLY        = bit.lshift(1ULL, 61)
+mod.ETH_RSS_L4_DST_ONLY        = bit.lshift(1ULL, 60)
+mod.ETH_RSS_L2_SRC_ONLY        = bit.lshift(1ULL, 59)
+mod.ETH_RSS_L2_DST_ONLY        = bit.lshift(1ULL, 58)
 
 --- Do not call dpdk.init() automatically on startup.
 --- You must not call any DPDK functions prior to invoking libmoon.init().
