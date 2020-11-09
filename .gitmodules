@@ -7,7 +7,7 @@
 	path = deps/dpdk
 	url = https://github.com/WiednerF/dpdk
 	ignore = untracked
-	branch = v20.05-libmoon
+	branch = v20.08-libmoon
 [submodule "deps/pciids"]
 	path = deps/pciids
 	url = https://github.com/emmericp/pciids
