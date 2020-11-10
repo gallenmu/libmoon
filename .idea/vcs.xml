@@ -3,7 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/deps/dpdk" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/deps/dpdk-kmods" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/deps/dpdk-kmods" vcs="" />
     <mapping directory="$PROJECT_DIR$/deps/highwayhash" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/deps/luajit" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/deps/pciids" vcs="Git" />
