@@ -38,7 +38,7 @@ SET(DPDK_LIBS
 	rte_cfgfile  rte_hash         rte_lpm      	     rte_meter     rte_pmd_i40e   	  rte_common_iavf      rte_sched        rte_timer
 	rte_cmdline  rte_ip_frag      rte_pipeline 	     rte_pmd_ixgbe rte_mempool_stack  rte_port             rte_table        rte_pmd_bnxt
 	rte_pmd_ena  rte_pmd_nfp      rte_stack          rte_bus_vdev  rte_bus_pci        rte_pci              rte_cryptodev    rte_fib
-	rte_pmd_iavf
+	rte_pmd_iavf rte_telemetry    rte_rcu            rte_eventdev  rte_rib
 )
 
 #Add Mellanox libraries if options are specified
