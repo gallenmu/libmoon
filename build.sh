@@ -71,12 +71,9 @@ fi
 if ${MLX4} ; then
 	sed -ri 's,(MLX4_PMD=).*,\1y,' config/common_base
 fi
-meson -Dprefix="$(readlink -f ./)/x86_64-native-linux-gcc" build
-cd build/
-ninja
-ninja install
-cd ../
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(readlink -f ./)/x86_64-native-linux-gcc/lib/x86_64-linux-gnu
+export MAKE_PAUSE=n
+make config T=x86_64-native-linux-gcc O=x86_64-native-linux-gcc
+EXTRA_CFLAGS="-Wno-error" make -j $NUM_CPUS O=x86_64-native-linux-gcc
 )
 
 (
