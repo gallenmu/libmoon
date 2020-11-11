@@ -6,7 +6,7 @@ local dpdkc = require "dpdkc"
 
 
 ffi.cdef[[
-enum i40e_status_code i40e_aq_config_vsi_bw_limit(void *hw, uint16_t seid, uint16_t credit, uint8_t max_bw, struct i40e_asq_cmd_details *cmd_details);
+int i40e_aq_config_vsi_bw_limit(void *hw, uint16_t seid, uint16_t credit, uint8_t max_bw, struct i40e_asq_cmd_details *cmd_details);
 ]]
 
 -- statistics
