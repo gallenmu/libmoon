@@ -12,7 +12,7 @@ local ffi    = require "ffi"
 local log    = require "log"
 
 -- DPDK mbuf flags (lib/librte_mbuf/rte_mbuf.h)
-mod.PKT_RX_VLAN_PKT			= bit.lshift(1ULL, 0)
+mod.PKT_RX_VLAN				= bit.lshift(1ULL, 0)
 mod.PKT_RX_RSS_HASH			= bit.lshift(1ULL, 1)
 mod.PKT_RX_FDIR				= bit.lshift(1ULL, 2)
 mod.PKT_RX_L4_CKSUM_BAD		= bit.lshift(1ULL, 3)
@@ -45,7 +45,7 @@ mod.PKT_TX_L4_MASK			= bit.lshift(3ULL, 52)
 mod.PKT_TX_IP_CKSUM			= bit.lshift(1ULL, 54)
 mod.PKT_TX_IPV4				= bit.lshift(1ULL, 55)
 mod.PKT_TX_IPV6				= bit.lshift(1ULL, 56)
-mod.PKT_TX_VLAN_PKT			= bit.lshift(1ULL, 57)
+mod.PKT_TX_VLAN				= bit.lshift(1ULL, 57)
 mod.PKT_TX_OUTER_IP_CKSUM	= bit.lshift(1ULL, 58)
 mod.PKT_TX_OUTER_IPV4		= bit.lshift(1ULL, 59)
 mod.PKT_TX_OUTER_IPV6		= bit.lshift(1ULL, 60)

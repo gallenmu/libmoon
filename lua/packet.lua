@@ -103,7 +103,7 @@ function pkt:setVlan(vlan, pcp, cfi)
 	self.ol_flags = bit.bor(self.ol_flags, dpdk.PKT_TX_VLAN_PKT)
 end
 
-local VLAN_VALID_MASK = bit.bor(dpdk.PKT_RX_VLAN_PKT, dpdk.PKT_TX_VLAN_PKT)
+local VLAN_VALID_MASK = bit.bor(dpdk.PKT_RX_VLAN, dpdk.PKT_TX_VLAN)
 
 --- Get the VLAN associated with a received packet.
 function pkt:getVlan()
