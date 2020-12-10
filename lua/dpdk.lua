@@ -191,6 +191,8 @@ function mod.init()
 	local coreMapping = ("%d-%d,(%d-%d)@%d"):format(cfg.cores[1], maxCore, maxCore + 1, maxCore + libmoon.config.numSharedCores, cfg.cores[1])
 	argv[#argv + 1] = ("--lcores=%s"):format(coreMapping)
 
+	argv[#argv + 1] = "--legacy-mem" --- Add the support for using old memory system (all reserved in the beginning)
+
 	if cfg.pciBlacklist then
 		if type(cfg.pciBlacklist) == "table" then
 			for i, v in ipairs(cfg.pciBlacklist) do

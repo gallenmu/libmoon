@@ -63,6 +63,7 @@ struct rte_flow_attr {
 	uint32_t priority; /**< Priority level within group. */
 	uint32_t ingress:1; /**< Rule applies to ingress traffic. */
 	uint32_t egress:1; /**< Rule applies to egress traffic. */
+	uint32_t transfer:1; /**< Rule applies to egress traffic. */
 	uint32_t reserved:30; /**< Reserved, must be zero. */
 };
 
@@ -1189,7 +1190,7 @@ function dev:l2GenericFilter(etype, queue, etypemask, priority, group)
 
 	-- set attributes
 	-- more than one group and priority might be unsupported
-        local flow_attr = ffi.new("struct rte_flow_attr", { group = group, priority = priority, ingress = 1, egress = 0, reserved = 0 })
+        local flow_attr = ffi.new("struct rte_flow_attr", { group = group, priority = priority, ingress = 1, egress = 0, transfer = 0, reserved = 0 })
 
 	-- set appropriate actions
         local action_array = ffi.new("struct rte_flow_action[2]", {
@@ -1259,7 +1260,7 @@ function dev:UdpGenericFilter(queue, priority, group)
 
 	-- set attributes
 
-        local flow_attr = ffi.new("struct rte_flow_attr", { group = 0, priority = priority, ingress = 1, egress = 0, reserved = 0 })
+        local flow_attr = ffi.new("struct rte_flow_attr", { group = 0, priority = priority, ingress = 1, egress = 0, transfer = 0, reserved = 0 })
 
 	-- set appropriate actions
         local action_array = ffi.new("struct rte_flow_action[2]", {
