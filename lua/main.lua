@@ -97,6 +97,7 @@ local function master(_, file, ...)
 	-- stop devices if necessary (seems to be a problem with virtio attached via vhost user
 	device.cleanupDevices()
 	-- exit program once the master task finishes
+	dpdkc.rte_eal_cleanup() --- Required to release all EAL Resources in the end when ending DPDK
 	if not result then
 		os.exit(result)
 	end

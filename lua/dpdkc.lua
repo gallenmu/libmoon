@@ -230,7 +230,10 @@ ffi.cdef[[
 -- dpdk functions and wrappers
 ffi.cdef[[
 	// eal init
-	int rte_eal_init(int argc, const char* argv[]); 
+	int rte_eal_init(int argc, const char* argv[]);
+
+	// eal exit
+	int rte_eal_cleanup();
 	
 	// cpu core management
 	int rte_eal_get_lcore_state(int core);
