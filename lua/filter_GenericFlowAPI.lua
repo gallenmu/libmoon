@@ -1052,7 +1052,7 @@ rte_flow_flush(uint8_t port_id,
 int
 rte_flow_query(uint8_t port_id,
 	       struct rte_flow *flow,
-	       enum rte_flow_action_type action,
+	       const struct rte_flow_action *action,
 	       void *data,
 	       struct rte_flow_error *error);
 
