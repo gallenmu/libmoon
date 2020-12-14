@@ -635,8 +635,6 @@ struct rte_flow_item {
  */
 enum rte_flow_action_type {
 	/**
-	 * [META]
-	 *
 	 * End marker for action lists. Prevents further processing of
 	 * actions, thereby ending the list.
 	 *
@@ -645,8 +643,6 @@ enum rte_flow_action_type {
 	RTE_FLOW_ACTION_TYPE_END,
 
 	/**
-	 * [META]
-	 *
 	 * Used as a placeholder for convenience. It is ignored and simply
 	 * discarded by PMDs.
 	 *
@@ -655,18 +651,23 @@ enum rte_flow_action_type {
 	RTE_FLOW_ACTION_TYPE_VOID,
 
 	/**
-	 * Leaves packets up for additional processing by subsequent flow
-	 * rules. This is the default when a rule does not contain a
-	 * terminating action, but can be specified to force a rule to
-	 * become non-terminating.
+	 * Leaves traffic up for additional processing by subsequent flow
+	 * rules; makes a flow rule non-terminating.
 	 *
 	 * No associated configuration structure.
 	 */
 	RTE_FLOW_ACTION_TYPE_PASSTHRU,
 
 	/**
-	 * [META]
+	 * RTE_FLOW_ACTION_TYPE_JUMP
 	 *
+	 * Redirects packets to a group on the current device.
+	 *
+	 * See struct rte_flow_action_jump.
+	 */
+	RTE_FLOW_ACTION_TYPE_JUMP,
+
+	/**
 	 * Attaches an integer value to packets and sets PKT_RX_FDIR and
 	 * PKT_RX_FDIR_ID mbuf flags.
 	 *
@@ -675,8 +676,6 @@ enum rte_flow_action_type {
 	RTE_FLOW_ACTION_TYPE_MARK,
 
 	/**
-	 * [META]
-	 *
 	 * Flags packets. Similar to MARK without a specific value; only
 	 * sets the PKT_RX_FDIR mbuf flag.
 	 *
@@ -701,14 +700,13 @@ enum rte_flow_action_type {
 	RTE_FLOW_ACTION_TYPE_DROP,
 
 	/**
-	 * [META]
+	 * Enables counters for this flow rule.
 	 *
-	 * Enables counters for this rule.
-	 *
-	 * These counters can be retrieved and reset through rte_flow_query(),
+	 * These counters can be retrieved and reset through rte_flow_query() or
+	 * rte_flow_shared_action_query() if the action provided via handle,
 	 * see struct rte_flow_query_count.
 	 *
-	 * No associated configuration structure.
+	 * See struct rte_flow_action_count.
 	 */
 	RTE_FLOW_ACTION_TYPE_COUNT,
 
@@ -722,20 +720,423 @@ enum rte_flow_action_type {
 	RTE_FLOW_ACTION_TYPE_RSS,
 
 	/**
-	 * Redirects packets to the physical function (PF) of the current
-	 * device.
+	 * Directs matching traffic to the physical function (PF) of the
+	 * current device.
 	 *
 	 * No associated configuration structure.
 	 */
 	RTE_FLOW_ACTION_TYPE_PF,
 
 	/**
-	 * Redirects packets to the virtual function (VF) of the current
-	 * device with the specified ID.
+	 * Directs matching traffic to a given virtual function of the
+	 * current device.
 	 *
 	 * See struct rte_flow_action_vf.
 	 */
 	RTE_FLOW_ACTION_TYPE_VF,
+
+	/**
+	 * Directs packets to a given physical port index of the underlying
+	 * device.
+	 *
+	 * See struct rte_flow_action_phy_port.
+	 */
+	RTE_FLOW_ACTION_TYPE_PHY_PORT,
+
+	/**
+	 * Directs matching traffic to a given DPDK port ID.
+	 *
+	 * See struct rte_flow_action_port_id.
+	 */
+	RTE_FLOW_ACTION_TYPE_PORT_ID,
+
+	/**
+	 * Traffic metering and policing (MTR).
+	 *
+	 * See struct rte_flow_action_meter.
+	 * See file rte_mtr.h for MTR object configuration.
+	 */
+	RTE_FLOW_ACTION_TYPE_METER,
+
+	/**
+	 * Redirects packets to security engine of current device for security
+	 * processing as specified by security session.
+	 *
+	 * See struct rte_flow_action_security.
+	 */
+	RTE_FLOW_ACTION_TYPE_SECURITY,
+
+	/**
+	 * Implements OFPAT_SET_MPLS_TTL ("MPLS TTL") as defined by the
+	 * OpenFlow Switch Specification.
+	 *
+	 * See struct rte_flow_action_of_set_mpls_ttl.
+	 */
+	RTE_FLOW_ACTION_TYPE_OF_SET_MPLS_TTL,
+
+	/**
+	 * Implements OFPAT_DEC_MPLS_TTL ("decrement MPLS TTL") as defined
+	 * by the OpenFlow Switch Specification.
+	 *
+	 * No associated configuration structure.
+	 */
+	RTE_FLOW_ACTION_TYPE_OF_DEC_MPLS_TTL,
+
+	/**
+	 * Implements OFPAT_SET_NW_TTL ("IP TTL") as defined by the OpenFlow
+	 * Switch Specification.
+	 *
+	 * See struct rte_flow_action_of_set_nw_ttl.
+	 */
+	RTE_FLOW_ACTION_TYPE_OF_SET_NW_TTL,
+
+	/**
+	 * Implements OFPAT_DEC_NW_TTL ("decrement IP TTL") as defined by
+	 * the OpenFlow Switch Specification.
+	 *
+	 * No associated configuration structure.
+	 */
+	RTE_FLOW_ACTION_TYPE_OF_DEC_NW_TTL,
+
+	/**
+	 * Implements OFPAT_COPY_TTL_OUT ("copy TTL "outwards" -- from
+	 * next-to-outermost to outermost") as defined by the OpenFlow
+	 * Switch Specification.
+	 *
+	 * No associated configuration structure.
+	 */
+	RTE_FLOW_ACTION_TYPE_OF_COPY_TTL_OUT,
+
+	/**
+	 * Implements OFPAT_COPY_TTL_IN ("copy TTL "inwards" -- from
+	 * outermost to next-to-outermost") as defined by the OpenFlow
+	 * Switch Specification.
+	 *
+	 * No associated configuration structure.
+	 */
+	RTE_FLOW_ACTION_TYPE_OF_COPY_TTL_IN,
+
+	/**
+	 * Implements OFPAT_POP_VLAN ("pop the outer VLAN tag") as defined
+	 * by the OpenFlow Switch Specification.
+	 *
+	 * No associated configuration structure.
+	 */
+	RTE_FLOW_ACTION_TYPE_OF_POP_VLAN,
+
+	/**
+	 * Implements OFPAT_PUSH_VLAN ("push a new VLAN tag") as defined by
+	 * the OpenFlow Switch Specification.
+	 *
+	 * See struct rte_flow_action_of_push_vlan.
+	 */
+	RTE_FLOW_ACTION_TYPE_OF_PUSH_VLAN,
+
+	/**
+	 * Implements OFPAT_SET_VLAN_VID ("set the 802.1q VLAN id") as
+	 * defined by the OpenFlow Switch Specification.
+	 *
+	 * See struct rte_flow_action_of_set_vlan_vid.
+	 */
+	RTE_FLOW_ACTION_TYPE_OF_SET_VLAN_VID,
+
+	/**
+	 * Implements OFPAT_SET_LAN_PCP ("set the 802.1q priority") as
+	 * defined by the OpenFlow Switch Specification.
+	 *
+	 * See struct rte_flow_action_of_set_vlan_pcp.
+	 */
+	RTE_FLOW_ACTION_TYPE_OF_SET_VLAN_PCP,
+
+	/**
+	 * Implements OFPAT_POP_MPLS ("pop the outer MPLS tag") as defined
+	 * by the OpenFlow Switch Specification.
+	 *
+	 * See struct rte_flow_action_of_pop_mpls.
+	 */
+	RTE_FLOW_ACTION_TYPE_OF_POP_MPLS,
+
+	/**
+	 * Implements OFPAT_PUSH_MPLS ("push a new MPLS tag") as defined by
+	 * the OpenFlow Switch Specification.
+	 *
+	 * See struct rte_flow_action_of_push_mpls.
+	 */
+	RTE_FLOW_ACTION_TYPE_OF_PUSH_MPLS,
+
+	/**
+	 * Encapsulate flow in VXLAN tunnel as defined in
+	 * rte_flow_action_vxlan_encap action structure.
+	 *
+	 * See struct rte_flow_action_vxlan_encap.
+	 */
+	RTE_FLOW_ACTION_TYPE_VXLAN_ENCAP,
+
+	/**
+	 * Decapsulate outer most VXLAN tunnel from matched flow.
+	 *
+	 * If flow pattern does not define a valid VXLAN tunnel (as specified by
+	 * RFC7348) then the PMD should return a RTE_FLOW_ERROR_TYPE_ACTION
+	 * error.
+	 */
+	RTE_FLOW_ACTION_TYPE_VXLAN_DECAP,
+
+	/**
+	 * Encapsulate flow in NVGRE tunnel defined in the
+	 * rte_flow_action_nvgre_encap action structure.
+	 *
+	 * See struct rte_flow_action_nvgre_encap.
+	 */
+	RTE_FLOW_ACTION_TYPE_NVGRE_ENCAP,
+
+	/**
+	 * Decapsulate outer most NVGRE tunnel from matched flow.
+	 *
+	 * If flow pattern does not define a valid NVGRE tunnel (as specified by
+	 * RFC7637) then the PMD should return a RTE_FLOW_ERROR_TYPE_ACTION
+	 * error.
+	 */
+	RTE_FLOW_ACTION_TYPE_NVGRE_DECAP,
+
+	/**
+	 * Add outer header whose template is provided in its data buffer
+	 *
+	 * See struct rte_flow_action_raw_encap.
+	 */
+	RTE_FLOW_ACTION_TYPE_RAW_ENCAP,
+
+	/**
+	 * Remove outer header whose template is provided in its data buffer.
+	 *
+	 * See struct rte_flow_action_raw_decap
+	 */
+	RTE_FLOW_ACTION_TYPE_RAW_DECAP,
+
+	/**
+	 * Modify IPv4 source address in the outermost IPv4 header.
+	 *
+	 * If flow pattern does not define a valid RTE_FLOW_ITEM_TYPE_IPV4,
+	 * then the PMD should return a RTE_FLOW_ERROR_TYPE_ACTION error.
+	 *
+	 * See struct rte_flow_action_set_ipv4.
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_IPV4_SRC,
+
+	/**
+	 * Modify IPv4 destination address in the outermost IPv4 header.
+	 *
+	 * If flow pattern does not define a valid RTE_FLOW_ITEM_TYPE_IPV4,
+	 * then the PMD should return a RTE_FLOW_ERROR_TYPE_ACTION error.
+	 *
+	 * See struct rte_flow_action_set_ipv4.
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_IPV4_DST,
+
+	/**
+	 * Modify IPv6 source address in the outermost IPv6 header.
+	 *
+	 * If flow pattern does not define a valid RTE_FLOW_ITEM_TYPE_IPV6,
+	 * then the PMD should return a RTE_FLOW_ERROR_TYPE_ACTION error.
+	 *
+	 * See struct rte_flow_action_set_ipv6.
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_IPV6_SRC,
+
+	/**
+	 * Modify IPv6 destination address in the outermost IPv6 header.
+	 *
+	 * If flow pattern does not define a valid RTE_FLOW_ITEM_TYPE_IPV6,
+	 * then the PMD should return a RTE_FLOW_ERROR_TYPE_ACTION error.
+	 *
+	 * See struct rte_flow_action_set_ipv6.
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_IPV6_DST,
+
+	/**
+	 * Modify source port number in the outermost TCP/UDP header.
+	 *
+	 * If flow pattern does not define a valid RTE_FLOW_ITEM_TYPE_TCP
+	 * or RTE_FLOW_ITEM_TYPE_UDP, then the PMD should return a
+	 * RTE_FLOW_ERROR_TYPE_ACTION error.
+	 *
+	 * See struct rte_flow_action_set_tp.
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_TP_SRC,
+
+	/**
+	 * Modify destination port number in the outermost TCP/UDP header.
+	 *
+	 * If flow pattern does not define a valid RTE_FLOW_ITEM_TYPE_TCP
+	 * or RTE_FLOW_ITEM_TYPE_UDP, then the PMD should return a
+	 * RTE_FLOW_ERROR_TYPE_ACTION error.
+	 *
+	 * See struct rte_flow_action_set_tp.
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_TP_DST,
+
+	/**
+	 * Swap the source and destination MAC addresses in the outermost
+	 * Ethernet header.
+	 *
+	 * If flow pattern does not define a valid RTE_FLOW_ITEM_TYPE_ETH,
+	 * then the PMD should return a RTE_FLOW_ERROR_TYPE_ACTION error.
+	 *
+	 * No associated configuration structure.
+	 */
+	RTE_FLOW_ACTION_TYPE_MAC_SWAP,
+
+	/**
+	 * Decrease TTL value directly
+	 *
+	 * No associated configuration structure.
+	 */
+	RTE_FLOW_ACTION_TYPE_DEC_TTL,
+
+	/**
+	 * Set TTL value
+	 *
+	 * See struct rte_flow_action_set_ttl
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_TTL,
+
+	/**
+	 * Set source MAC address from matched flow.
+	 *
+	 * If flow pattern does not define a valid RTE_FLOW_ITEM_TYPE_ETH,
+	 * the PMD should return a RTE_FLOW_ERROR_TYPE_ACTION error.
+	 *
+	 * See struct rte_flow_action_set_mac.
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_MAC_SRC,
+
+	/**
+	 * Set destination MAC address from matched flow.
+	 *
+	 * If flow pattern does not define a valid RTE_FLOW_ITEM_TYPE_ETH,
+	 * the PMD should return a RTE_FLOW_ERROR_TYPE_ACTION error.
+	 *
+	 * See struct rte_flow_action_set_mac.
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_MAC_DST,
+
+	/**
+	 * Increase sequence number in the outermost TCP header.
+	 *
+	 * Action configuration specifies the value to increase
+	 * TCP sequence number as a big-endian 32 bit integer.
+	 *
+	 * @p conf type:
+	 * @code rte_be32_t * @endcode
+	 *
+	 * Using this action on non-matching traffic will result in
+	 * undefined behavior.
+	 */
+	RTE_FLOW_ACTION_TYPE_INC_TCP_SEQ,
+
+	/**
+	 * Decrease sequence number in the outermost TCP header.
+	 *
+	 * Action configuration specifies the value to decrease
+	 * TCP sequence number as a big-endian 32 bit integer.
+	 *
+	 * @p conf type:
+	 * @code rte_be32_t * @endcode
+	 *
+	 * Using this action on non-matching traffic will result in
+	 * undefined behavior.
+	 */
+	RTE_FLOW_ACTION_TYPE_DEC_TCP_SEQ,
+
+	/**
+	 * Increase acknowledgment number in the outermost TCP header.
+	 *
+	 * Action configuration specifies the value to increase
+	 * TCP acknowledgment number as a big-endian 32 bit integer.
+	 *
+	 * @p conf type:
+	 * @code rte_be32_t * @endcode
+	 * Using this action on non-matching traffic will result in
+	 * undefined behavior.
+	 */
+	RTE_FLOW_ACTION_TYPE_INC_TCP_ACK,
+
+	/**
+	 * Decrease acknowledgment number in the outermost TCP header.
+	 *
+	 * Action configuration specifies the value to decrease
+	 * TCP acknowledgment number as a big-endian 32 bit integer.
+	 *
+	 * @p conf type:
+	 * @code rte_be32_t * @endcode
+	 *
+	 * Using this action on non-matching traffic will result in
+	 * undefined behavior.
+	 */
+	RTE_FLOW_ACTION_TYPE_DEC_TCP_ACK,
+
+	/**
+	 * Set Tag.
+	 *
+	 * Tag is for internal flow usage only and
+	 * is not delivered to the application.
+	 *
+	 * See struct rte_flow_action_set_tag.
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_TAG,
+
+	/**
+	 * Set metadata on ingress or egress path.
+	 *
+	 * See struct rte_flow_action_set_meta.
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_META,
+
+	/**
+	 * Modify IPv4 DSCP in the outermost IP header.
+	 *
+	 * If flow pattern does not define a valid RTE_FLOW_ITEM_TYPE_IPV4,
+	 * then the PMD should return a RTE_FLOW_ERROR_TYPE_ACTION error.
+	 *
+	 * See struct rte_flow_action_set_dscp.
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_IPV4_DSCP,
+
+	/**
+	 * Modify IPv6 DSCP in the outermost IP header.
+	 *
+	 * If flow pattern does not define a valid RTE_FLOW_ITEM_TYPE_IPV6,
+	 * then the PMD should return a RTE_FLOW_ERROR_TYPE_ACTION error.
+	 *
+	 * See struct rte_flow_action_set_dscp.
+	 */
+	RTE_FLOW_ACTION_TYPE_SET_IPV6_DSCP,
+
+	/**
+	 * Report as aged flow if timeout passed without any matching on the
+	 * flow.
+	 *
+	 * See struct rte_flow_action_age.
+	 * See function rte_flow_get_aged_flows
+	 * see enum RTE_ETH_EVENT_FLOW_AGED
+	 * See struct rte_flow_query_age
+	 */
+	RTE_FLOW_ACTION_TYPE_AGE,
+
+	/**
+	 * The matching packets will be duplicated with specified ratio and
+	 * applied with own set of actions with a fate action.
+	 *
+	 * See struct rte_flow_action_sample.
+	 */
+	RTE_FLOW_ACTION_TYPE_SAMPLE,
+
+	/**
+	 * Describe action shared across multiple flow rules.
+	 *
+	 * Allow multiple rules reference the same action by handle (see
+	 * struct rte_flow_shared_action).
+	 */
+	RTE_FLOW_ACTION_TYPE_SHARED,
 };
 
 /**
