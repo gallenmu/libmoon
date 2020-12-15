@@ -10,7 +10,7 @@
 	branch = v20.08-libmoon
 [submodule "deps/pciids"]
 	path = deps/pciids
-	url = https://github.com/emmericp/pciids
+	url = https://github.com/gallenmu/pciids
 	ignore = untracked
 	branch = master
 [submodule "lua/lib/syscall"]
