@@ -79,7 +79,7 @@ ffi.cdef[[
 		uint64_t timestamp;
 
 		/* second cache line - fields only used in slow path or on TX */
-		MARKER_CACHE_ALIGNED cacheline1;
+		RTE_MARKER_CACHE_ALIGNED cacheline1;
 
 		uint64_t udata64;
 
