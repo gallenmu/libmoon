@@ -21,19 +21,19 @@ ffi.cdef[[
 	struct mempool {
 	}; // dummy struct, only needed to associate it with a metatable
 
-	typedef void    *MARKER[0];
-	typedef void    *MARKER_CACHE_ALIGNED[0] __attribute__((aligned(64)));
-	typedef uint8_t  MARKER8[0];
-	typedef uint64_t MARKER64[0];
+	typedef void    *RTE_MARKER[0];
+	typedef void    *RTE_MARKER_CACHE_ALIGNED[0] __attribute__((aligned(64)));
+	typedef uint8_t  RTE_MARKER8[0];
+	typedef uint64_t RTE_MARKER64[0];
 
 	struct rte_mbuf {
-		MARKER cacheline0;
+		RTE_MARKER cacheline0;
 
 		void *buf_addr;           /**< Virtual address of segment buffer. */
 		void *buf_physaddr; /**< Physical address of segment buffer. */
 
 		/* next 6 bytes are initialised on RX descriptor rearm */
-		MARKER8 rearm_data;
+		RTE_MARKER64 rearm_data;
 		uint16_t data_off;
 		uint16_t refcnt;
 		uint16_t nb_segs;          /**< Number of segments. */
@@ -41,7 +41,7 @@ ffi.cdef[[
 
 		uint64_t ol_flags;        /**< Offload features. */
 		/* remaining bytes are set on RX when pulling packet from descriptor */
-		MARKER rx_descriptor_fields1;
+		RTE_MARKER rx_descriptor_fields1;
 
 		/*
 		* The packet type, which is the combination of outer/inner L2, L3, L4
