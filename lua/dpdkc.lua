@@ -85,10 +85,17 @@ ffi.cdef[[
 		} hash;                   /**< hash information */
 		uint16_t vlan_tci_outer;
 		uint16_t buf_len;
-		struct rte_mempool *pool; /**< Pool from which mbuf was allocated. */
+		/** Valid if PKT_RX_TIMESTAMP is set. The unit and time reference
+         * are not normalized but are always the same for a given port.
+         * Some devices allow to query rte_eth_read_clock that will return the
+         * current device timestamp.
+         */
+        uint64_t timestamp;
 
 		/* second cache line - fields only used in slow path or on TX */
 		MARKER_CACHE_ALIGNED cacheline1;
+
+        struct rte_mempool *pool; /**< Pool from which mbuf was allocated. */
 
 		struct rte_mbuf *next;    /**< Next segment of scattered packet. */
 
@@ -102,7 +109,9 @@ ffi.cdef[[
 
 		/** Timesync flags for use with IEEE1588. */
 		uint16_t timesync;
-		uint64_t dynfield1[9]; /**Reserved for dynamic field*/
+		uint32_t seqn;
+		struct rte_mbuf_ext_shared_info *shinfo;
+		uint64_t dynfield1[2]; /**Reserved for dynamic field*/
 	};
 
 	// device status/info
