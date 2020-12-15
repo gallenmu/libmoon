@@ -100,7 +100,7 @@ end
 function pkt:setVlan(vlan, pcp, cfi)
 	local tci = vlan + bit.lshift(pcp or 0, 13) + bit.lshift(cfi or 0, 12)
 	self.vlan_tci = tci
-	self.ol_flags = bit.bor(self.ol_flags, dpdk.PKT_TX_VLAN_PKT)
+	self.ol_flags = bit.bor(self.ol_flags, dpdk.PKT_TX_VLAN)
 end
 
 local VLAN_VALID_MASK = bit.bor(dpdk.PKT_RX_VLAN, dpdk.PKT_TX_VLAN)
