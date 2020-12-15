@@ -112,7 +112,7 @@ ffi.cdef[[
 		uint32_t seqn;
 		struct rte_mbuf_ext_shared_info *shinfo;
 		uint64_t dynfield1[2]; /**Reserved for dynamic field*/
-	};
+	} __rte_cache_aligned;
 
 	// device status/info
 	struct rte_eth_link {
