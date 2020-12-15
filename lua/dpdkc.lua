@@ -26,13 +26,6 @@ ffi.cdef[[
 	typedef uint8_t  MARKER8[0];
 	typedef uint64_t MARKER64[0];
 
-	struct rte_mbuf_sched {
-        uint32_t queue_id;
-        uint8_t traffic_class;
-        uint8_t color;
-        uint16_t reserved;
-    };
-	
 	struct rte_mbuf {
 		MARKER cacheline0;
 
@@ -75,34 +68,27 @@ ffi.cdef[[
 				/**< First 4 flexible bytes or FD ID, dependent on
 			     PKT_RX_FDIR_* flag in ol_flags. */
 			} fdir;           /**< Filter identifier if FDIR enabled */
-			struct rte_mbuf_sched sched;
 			struct {
-			    uint32_t reserved1;
-                uint16_t reserved2;
-                uint16_t txq;
-            } txadapter;
+				uint32_t lo;
+				uint32_t hi;
+			} sched;          /**< Hierarchical scheduler */
 			uint32_t usr;	  /**< User defined tags. See rte_distributor_process() */
 		} hash;                   /**< hash information */
 		uint16_t vlan_tci_outer;
 		uint16_t buf_len;
-		/** Valid if PKT_RX_TIMESTAMP is set. The unit and time reference
-         * are not normalized but are always the same for a given port.
-         * Some devices allow to query rte_eth_read_clock that will return the
-         * current device timestamp.
-         */
-        uint64_t timestamp;
+		uint64_t timestamp;
 
 		/* second cache line - fields only used in slow path or on TX */
 		MARKER_CACHE_ALIGNED cacheline1;
 
-        struct rte_mempool *pool; /**< Pool from which mbuf was allocated. */
+		uint64_t udata64;
 
+		struct rte_mempool *pool; /**< Pool from which mbuf was allocated. */
 		struct rte_mbuf *next;    /**< Next segment of scattered packet. */
 
 		/* fields to support TX offloads */
 		uint64_t tx_offload;
 
-        void *shinfo; /**For external information**/
 		/** Size of the application private data. In case of an indirect
 		 * mbuf, it stores the direct mbuf private data size. */
 		uint16_t priv_size;
@@ -110,9 +96,10 @@ ffi.cdef[[
 		/** Timesync flags for use with IEEE1588. */
 		uint16_t timesync;
 		uint32_t seqn;
-		struct rte_mbuf_ext_shared_info *shinfo;
+
+		void* shinfo; /**Shared Data for external buffer attached**/
 		uint64_t dynfield1[2]; /**Reserved for dynamic field*/
-	} __rte_cache_aligned;
+	};
 
 	// device status/info
 	struct rte_eth_link {
